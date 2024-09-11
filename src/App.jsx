@@ -5,16 +5,15 @@ import * as signalR from '@microsoft/signalr';  // Importamos SignalR
 
 const StationCard = ({ id, status, line, productionTime, deadTime, lastSealTime, numStops, onClick }) => {
   const getStatusClassName = (status) => {
+    debugger
     switch (status) {
-      case 3:
-        return 'status-idle';
-      case "1":
+      case 1:
         return 'status-production';
-      case "2":
+      case 2:
         return 'status-stopped';
-      case "4":
+      case 4:
         return 'status-fault';
-      case "3":
+      case 3:
         return 'status-idle';
       default:
         return 'status-stopped';
@@ -26,10 +25,10 @@ const StationCard = ({ id, status, line, productionTime, deadTime, lastSealTime,
       <header style={{ height: '1.6rem', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
         <div className={`cardSelladoraHeaderStatus ${getStatusClassName(status)}`}>
           <p className="setEstatus" style={{ fontSize: '12px', color: '#ffffff', margin: '0 !important' }}>
-            {status === "1" ? 'EN PRODUCCION' :
-             status === "2" ? 'ESTACIÓN ALARMADA' :
-             status === "3" ? 'SIN TRABAJO' :
-             status === "4" ? 'PARO POR FALLA' : ''}
+            {status === 1? 'EN PRODUCCION' :
+             status === 2 ? 'ESTACIÓN ALARMADA' :
+             status === 3 ? 'SIN TRABAJO' :
+             status === 4 ? 'PARO POR FALLA' : ''}
           </p>
         </div>
       </header>
@@ -37,9 +36,9 @@ const StationCard = ({ id, status, line, productionTime, deadTime, lastSealTime,
       <div className="d-flex justify-content-center">
         <img className="cardMachineIMG"
           src={`../src/assets/${status === "1" ? 'work.svg' :
-            status === "2" ? 'warning.svg' :
-            status === "4" ? 'sleep.svg' :
-            status === "3" ? 'nowork.svg' :
+            status === 2 ? 'warning.svg' :
+            status === 4 ? 'sleep.svg' :
+            status === 3 ? 'nowork.svg' :
             'nowork.svg'}`}
           width="74"
           alt="Machine" />
@@ -73,7 +72,7 @@ const App = () => {
   useEffect(() => {
     const setupSignalR = async () => {
       const connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://192.168.1.67:5202/estatusHub") //ServidorSignalR
+        .withUrl("http://192.168.100.187:5203/estatusHub") //ServidorSignalR
         .withAutomaticReconnect()
         .build();
       try {
@@ -117,7 +116,7 @@ const App = () => {
   // Función para obtener datos iniciales desde la API
   const fetchDatos = async () => {
     try {
-      const response = await fetch('http://192.168.1.67:5203/api/Informacion/Estacion', {
+      const response = await fetch('http://192.168.100.187:5202/api/Informacion/Estacion', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
